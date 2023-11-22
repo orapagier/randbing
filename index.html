@@ -1,12 +1,37 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
-  <title>Bing.com</title>
+  <title>Bing Search</title>
 </head>
+
 <body>
-  
-  <iframe src="https://www.bing.com" title="Bing" width="100%" height="100%">
+
+  <iframe id="bing-frame" src="https://www.bing.com" width="100%" height="600">
   </iframe>
-  
+
+  <script>
+    
+    // Array of words
+    const words = ['apple', 'cat', 'book'];
+    
+    // Get random word
+    const word = words[Math.floor(Math.random() * words.length)];
+    
+    // Get iframe 
+    var frame = document.getElementById("bing-frame");
+    
+    // Find search input in iframe
+    var input = frame.contentDocument.getElementById("sb_form_q");
+    
+    // Enter random word 
+    input.value = word;
+    
+    // Simulate enter keypress
+    const e = new Event('keypress');
+    e.keyCode = 13; 
+    input.dispatchEvent(e);
+
+  </script>
+
 </body>
 </html>
