@@ -27,29 +27,24 @@ button {
 // Function to generate a new search
 function generateNewSearch() {
 
-  // Open bing.com in a new tab
   var newTab = window.open("https://www.bing.com", "_blank");
   
-  // Wait for the page to load
   setTimeout(function() {
 
-    // Get the search input element
     var searchInput = newTab.document.getElementById("sb_form_q");
-
-    // Generate a random search term
+    
+    // Set the input value 
     var searchTerm = generateRandomWord();
-
-    // Enter the search term in the input
     searchInput.value = searchTerm;
 
-    // Submit the search form
-    newTab.document.getElementById("sb_form").submit();
+    // Dispatch an input event to trigger live search
+    var inputEvent = new Event('input', {bubbles: true}); 
+    searchInput.dispatchEvent(inputEvent);
 
   }, 2000);
 
-  // Close the tab after 10 seconds
   setTimeout(function() {
-    newTab.close();
+    newTab.close();  
   }, 10000);
 
 }
