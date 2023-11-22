@@ -40,8 +40,14 @@
       // Get the search term.
       var searchTerm = generateRandomWord();
 
-      // Redirect to Bing with the search term.
-      window.location.href = "https://www.bing.com/search?q=" + encodeURIComponent(searchTerm);
+      // Open Bing in the same window.
+      window.location.href = "https://www.bing.com";
+
+      // Wait for Bing to load, then input the search term and press Enter.
+      setTimeout(function () {
+        document.getElementById("sb_form_q").value = searchTerm; // Change "sb_form_q" to the actual ID of the Bing search input field.
+        document.getElementById("sb_form_go").click(); // Change "sb_form_go" to the actual ID of the Bing search button.
+      }, 3000); // Adjust the timeout as needed.
     }
 
     // Auto-generate a new search every 12 seconds.
