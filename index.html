@@ -1,37 +1,85 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
+
 <head>
-  <title>Bing Search</title>
+  <style>
+    h1,
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button {
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
+  <title>Random Search Terms</title>
 </head>
 
 <body>
-
-  <iframe id="bing-frame" src="https://www.bing.com" width="100%" height="600">
-  </iframe>
+  <h1>Random Search Terms</h1>
+  <p>This website generates random search terms.</p>
+  <p>Click the button to generate a new search term.</p>
+  <button onclick="generateNewSearch()">Generate new search</button>
 
   <script>
-    
-    // Array of words
-    const words = ['apple', 'cat', 'book'];
-    
-    // Get random word
-    const word = words[Math.floor(Math.random() * words.length)];
-    
-    // Get iframe 
-    var frame = document.getElementById("bing-frame");
-    
-    // Find search input in iframe
-    var input = frame.contentDocument.getElementById("sb_form_q");
-    
-    // Enter random word 
-    input.value = word;
-    
-    // Simulate enter keypress
-    const e = new Event('keypress');
-    e.keyCode = 13; 
-    input.dispatchEvent(e);
+    // Function to generate a random word.
+    function generateRandomWord() {
+      // Get a random word from the words array.
+      var words = document.getElementById("words").innerHTML.split(",");
+      var randomIndex = Math.floor(Math.random() * words.length);
+      var randomWord = words[randomIndex];
+      return randomWord;
+    }
 
+    // Function to generate a new search.
+    function generateNewSearch() {
+      // Get the current URL.
+      var currentURL = window.location.href;
+
+      // Add a random word and the specified string to the URL.
+      var newWord = generateRandomWord();
+      var additionalQueryString = "&qs=n&form=QBRE&sp=-1&lq=0&pq=mens&sc=14-4&sk=&cvid=F15471563B53474980E621BF820F5364&ghsh=0&ghacc=0&ghpl=";
+      var newURL = "https://www.bing.com/search?q=" + newWord + additionalQueryString;
+
+      // Open the new URL in a new tab.
+      var newTab = window.open(newURL, "_blank");
+
+      // Close the new tab after 5 seconds.
+      setTimeout(function () {
+        newTab.close();
+      }, 10000);
+    }
+
+    // Auto-generate a new search every 12 seconds.
+    setInterval(generateNewSearch, 12000);
+
+    // Get a list of random words from an external API.
+    var request = new XMLHttpRequest();
+    request.open("GET", "https://random-word-api.herokuapp.com/word?number=1000", true);
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        // Parse the JSON response and join the words into a string.
+        var words = JSON.parse(request.responseText);
+        var wordsString = words.join(",");
+        // Set the words as the content of a hidden element.
+        var wordsElement = document.createElement("div");
+        wordsElement.id = "words";
+        wordsElement.style.display = "none";
+        wordsElement.innerHTML = wordsString;
+        document.body.appendChild(wordsElement);
+      } else {
+        console.error("Error fetching random words");
+      }
+    };
+    request.onerror = function () {
+      console.error("Error fetching random words");
+    };
+    request.send();
   </script>
-
 </body>
+
 </html>
