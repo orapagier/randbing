@@ -1,81 +1,75 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style>
-h1, p {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  <style>
+    h1,
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-button {
-  display: block;
-  margin: 0 auto;
-  text-align: center;
-}
-</style>
-<title>Random Search Terms</title>
+    button {
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
+  <title>Random Search Terms</title>
 </head>
+
 <body>
-<h1>Random Search Terms</h1>
-<p>This website generates random search terms.</p>
-<p>Click the button to generate a new search term.</p>
-<button onclick="generateNewSearch()">Generate new search</button>
-<script>
-// This code generates random search terms.
+  <h1>Random Search Terms</h1>
+  <p>This website generates random search terms.</p>
+  <p>Click the button to generate a new search term.</p>
+  <button onclick="generateNewSearch()">Generate new search</button>
 
-// Function to generate a new search
-function generateNewSearch() {
+  <script>
+    // Function to generate a random word.
+    function generateRandomWord() {
+      // Get a random word from the words array.
+      var words = document.getElementById("words").innerHTML.split(",");
+      var randomIndex = Math.floor(Math.random() * words.length);
+      var randomWord = words[randomIndex];
+      return randomWord;
+    }
 
-  var newTab = window.open("https://www.bing.com", "_blank");
-  
-  setTimeout(function() {
+    // Function to generate a new search.
+    function generateNewSearch() {
+      // Get the search term.
+      var searchTerm = generateRandomWord();
 
-    var searchInput = newTab.document.getElementById("sb_form_q");
-    
-    // Set the input value 
-    var searchTerm = generateRandomWord();
-    searchInput.value = searchTerm;
+      // Redirect to Bing with the search term.
+      window.location.href = "https://www.bing.com/search?q=" + encodeURIComponent(searchTerm);
+    }
 
-    // Dispatch an input event to trigger live search
-    var inputEvent = new Event('input', {bubbles: true}); 
-    searchInput.dispatchEvent(inputEvent);
+    // Auto-generate a new search every 12 seconds.
+    setInterval(generateNewSearch, 12000);
 
-  }, 2000);
-
-  setTimeout(function() {
-    newTab.close();  
-  }, 10000);
-
-}
-
-// Auto-generate a new search every 12 seconds.
-setInterval(generateNewSearch, 12000);
-
-// Get a list of random words from an external API.
-var request = new XMLHttpRequest();
-request.open("GET", "https://random-word-api.herokuapp.com/word?number=1000", true);
-request.onload = function() {
-  if (request.status >= 200 && request.status < 400) {
-    // Parse the JSON response and join the words into a string.
-    var words = JSON.parse(request.responseText);
-    var wordsString = words.join(",");
-
-    // Set the words as the content of a hidden element.
-    var wordsElement = document.createElement("div");
-    wordsElement.id = "words";
-    wordsElement.style.display = "none";
-    wordsElement.innerHTML = wordsString;
-    document.body.appendChild(wordsElement);
-  } else {
-    console.error("Error fetching random words");
-  }
-};
-request.onerror = function() {
-  console.error("Error fetching random words");
-};
-request.send();
-
-</script>
+    // Get a list of random words from an external API.
+    var request = new XMLHttpRequest();
+    request.open("GET", "https://random-word-api.herokuapp.com/word?number=1000", true);
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        // Parse the JSON response and join the words into a string.
+        var words = JSON.parse(request.responseText);
+        var wordsString = words.join(",");
+        // Set the words as the content of a hidden element.
+        var wordsElement = document.createElement("div");
+        wordsElement.id = "words";
+        wordsElement.style.display = "none";
+        wordsElement.innerHTML = wordsString;
+        document.body.appendChild(wordsElement);
+      } else {
+        console.error("Error fetching random words");
+      }
+    };
+    request.onerror = function () {
+      console.error("Error fetching random words");
+    };
+    request.send();
+  </script>
 </body>
+
 </html>
