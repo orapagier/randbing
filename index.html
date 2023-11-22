@@ -24,32 +24,34 @@ button {
 <script>
 // This code generates random search terms.
 
-// Function to generate a random word.
-function generateRandomWord() {
-  // Get a random word from the words array.
-  var words = document.getElementById("words").innerHTML.split(",");
-  var randomIndex = Math.floor(Math.random() * words.length);
-  var randomWord = words[randomIndex];
-
-  return randomWord;
-}
-
-// Function to generate a new search.
+// Function to generate a new search
 function generateNewSearch() {
-  // Get the current URL.
-  var currentURL = window.location.href;
 
-  // Add a random word to the URL.
-  var newWord = generateRandomWord();
-  var newURL = "https://www.bing.com/search?q=" + newWord;
+  // Open bing.com in a new tab
+  var newTab = window.open("https://www.bing.com", "_blank");
+  
+  // Wait for the page to load
+  setTimeout(function() {
 
-  // Open the new URL in a new tab.
-  var newTab = window.open(newURL, "_blank");
+    // Get the search input element
+    var searchInput = newTab.document.getElementById("sb_form_q");
 
-  // Close the new tab after 5 seconds.
+    // Generate a random search term
+    var searchTerm = generateRandomWord();
+
+    // Enter the search term in the input
+    searchInput.value = searchTerm;
+
+    // Submit the search form
+    newTab.document.getElementById("sb_form").submit();
+
+  }, 2000);
+
+  // Close the tab after 10 seconds
   setTimeout(function() {
     newTab.close();
   }, 10000);
+
 }
 
 // Auto-generate a new search every 12 seconds.
